@@ -9,7 +9,6 @@ Link to docker hub: https://hub.docker.com/r/dachack/airthings-exporter
 - Check the Airthings app or the [web dashboard](https://dashboard.airthings.com) to obtain your device serial number. This is your client id
 - Go to the [Airthings Integrations webpage](https://dashboard.airthings.com/integrations/api-integration) and request an API Client to obtain a client secret
 - Run container in same virtual network as your Prometheus server(see below)
-```
 
 ## Usage
 
