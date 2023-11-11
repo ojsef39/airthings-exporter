@@ -1,33 +1,29 @@
 # Airthings Exporter
 
-Prometheus exporter for Airthings devices.
-
-## Requirements
-
-- Python 3
-- Airthings device
+Docker container image for Prometheus exporter for Airthings devices.
+Link to docker hub: https://hub.docker.com/r/dachack/airthings-exporter
 
 ## Setup
 
 - Register your Airthings device to sync with the cloud following the instructions manual
 - Check the Airthings app or the [web dashboard](https://dashboard.airthings.com) to obtain your device serial number. This is your client id
 - Go to the [Airthings Integrations webpage](https://dashboard.airthings.com/integrations/api-integration) and request an API Client to obtain a client secret
-- Install airthings-exporter
-```shell
-pip install airthings-exporter
+- Run container in same virtual network as your Prometheus server(see below)
 ```
 
 ## Usage
 
 ```shell
-# Start server (1 device)
-airthings-exporter --client-id [client_id] --client-secret [client_secret] --device-id [device_id]
-
-# Start server (2 devices)
-airthings-exporter --client-id [client_id] --client-secret [client_secret] --device-id [device_id_1] --device-id [device_id_2]
-
-# Test server works
-curl -s localhost:8000
+  airthings-exporter:
+    container_name: airthings-exporter
+    image: dachack/airthings-exporter
+    networks:
+      - prometheus
+    environment:
+      client_id: YOUR_CLIENT_ID
+      client_secret: YOUR_SECRET
+      device_id: YOUR_DEVICE_ID
+    restart: unless-stopped
 ```
 
 ## Tested Devices
