@@ -25,6 +25,8 @@ Link to docker hub: https://hub.docker.com/r/dachack/airthings-exporter
     restart: unless-stopped
 ```
 
+Use the `--port` option have the exporter listen on a different port. Default port is 8000.
+
 ## Tested Devices
 
 - Airthings View Plus
