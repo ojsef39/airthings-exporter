@@ -145,16 +145,16 @@ spec:
               cpu: "100m"
           livenessProbe:
             httpGet:
-              path: /metrics
-              port: 8000
-            initialDelaySeconds: 30
-            periodSeconds: 60
-          readinessProbe:
-            httpGet:
-              path: /metrics
+              path: /health
               port: 8000
             initialDelaySeconds: 10
             periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 10
 ---
 apiVersion: v1
 kind: Service
@@ -220,11 +220,27 @@ scrape_configs:
 - Airthings View Plus
 - Airthings Wave Mini
 
-## API Limitations
+## Endpoints
+
+- **`/metrics`** - Prometheus metrics endpoint
+- **`/health`** - Health check endpoint (does not count against API rate limit)
+
+Use `/health` for Kubernetes liveness/readiness probes to avoid consuming your API quota.
+
+## API Limitations & Rate Limit Handling
 
 ⚠️ Airthings API for consumers allows only **120 requests per hour**. Each Prometheus scrape sends one request per device to the Airthings API.
 
 **Recommended scrape interval:** 5 minutes (12 scrapes/hour per device)
+
+### Rate Limit Behavior
+
+When the API rate limit is hit (HTTP 429), the exporter will:
+
+- Log a warning message
+- Return the last successfully cached metrics (stale data)
+
+This prevents CrashLoopBackOff in Kubernetes and ensures continuous monitoring with slightly stale data during rate limit periods.
 
 ## Metrics Exported
 

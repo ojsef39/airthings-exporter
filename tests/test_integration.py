@@ -88,12 +88,13 @@ class TestIntegration:
 
     @patch("requests.post")
     def test_api_error_handling(self, mock_post, mock_device_id):
-        """Test handling of API errors."""
+        """Test handling of API errors - should raise exception to be caught by HTTP handler."""
         # Simulate API error
         mock_post.side_effect = requests.exceptions.RequestException("API Error")
 
         collector = CloudCollector("client_id", "client_secret", [mock_device_id])
 
+        # Should raise exception (to be caught by main.py and return 500)
         with pytest.raises(requests.exceptions.RequestException):
             list(collector.collect())
 
