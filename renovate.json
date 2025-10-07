@@ -1,17 +1,21 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "reviewers": ["ojsef39"],
-  "regexManagers": [
+  "customManagers": [
     {
-      "fileMatch": ["^devenv\\.nix$"],
+      "customType": "regex",
+      "managerFilePatterns": ["/^devenv\\.nix$/"],
       "matchStrings": ["version\\s*=\\s*\"(?<currentValue>\\d+\\.\\d+)\""],
       "depNameTemplate": "python",
       "datasourceTemplate": "docker",
       "versioningTemplate": "loose"
     },
     {
-      "fileMatch": ["^pyproject\\.toml$"],
-      "matchStrings": ["pythonVersion\\s*=\\s*\"(?<currentValue>\\d+\\.\\d+)\""],
+      "customType": "regex",
+      "managerFilePatterns": ["/^pyproject\\.toml$/"],
+      "matchStrings": [
+        "pythonVersion\\s*=\\s*\"(?<currentValue>\\d+\\.\\d+)\""
+      ],
       "depNameTemplate": "python",
       "datasourceTemplate": "docker",
       "versioningTemplate": "loose"
@@ -19,16 +23,14 @@
   ],
   "packageRules": [
     {
-      "matchDatasources": ["docker"],
-      "matchPackageNames": ["python"],
-      "allowedVersions": "<=3.12"
-    },
-    {
       "matchDatasources": ["github-tags"],
       "matchPackageNames": ["actions/setup-python"],
       "matchFileNames": [".github/workflows/**"],
-      "extractVersion": "^(?<version>\\d+\\.\\d+)$",
-      "allowedVersions": "<=3.12"
+      "extractVersion": "^(?<version>\\d+\\.\\d+)$"
+    },
+    {
+      "matchDepNames": ["python"],
+      "allowedVersions": "<3.13"
     }
   ]
 }
