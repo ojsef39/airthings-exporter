@@ -1,3 +1,36 @@
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json"
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "reviewers": ["ojsef39"],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["/^devenv\\.nix$/"],
+      "matchStrings": ["version\\s*=\\s*\"(?<currentValue>\\d+\\.\\d+)\""],
+      "depNameTemplate": "python",
+      "datasourceTemplate": "docker",
+      "versioningTemplate": "loose"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["/^pyproject\\.toml$/"],
+      "matchStrings": [
+        "pythonVersion\\s*=\\s*\"(?<currentValue>\\d+\\.\\d+)\""
+      ],
+      "depNameTemplate": "python",
+      "datasourceTemplate": "docker",
+      "versioningTemplate": "loose"
+    }
+  ],
+  "packageRules": [
+    {
+      "matchDatasources": ["github-tags"],
+      "matchPackageNames": ["actions/setup-python"],
+      "matchFileNames": [".github/workflows/**"],
+      "extractVersion": "^(?<version>\\d+\\.\\d+)$"
+    },
+    {
+      "matchDepNames": ["python"],
+      "allowedVersions": "<3.13"
+    }
+  ]
 }
